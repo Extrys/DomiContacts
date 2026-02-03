@@ -39,8 +39,13 @@ namespace Domi.LowLevel
 			{
 				ref readonly var p = ref header.GetContactPair(j);
 
+#if UNITY_6000_3_OR_NEWER
 				int rawA = p.colliderEntityId;
 				int rawB = p.otherColliderEntityId;
+#else
+				int rawA = p.colliderInstanceID;
+				int rawB = p.otherColliderInstanceID;
+#endif
 
 				if (rawA != 0) hasSideA = 1;
 				if (rawB != 0) hasSideB = 1;
@@ -75,8 +80,13 @@ namespace Domi.LowLevel
 				// exclusion antes de acumular
 				if (!p.isCollisionExit && anyExit != 0)
 				{
+#if UNITY_6000_3_OR_NEWER
 					int rawA = p.colliderEntityId;
 					int rawB = p.otherColliderEntityId;
+#else
+					int rawA = p.colliderInstanceID;
+					int rawB = p.otherColliderInstanceID;
+#endif
 
 					if (rawA != 0 && rawB != 0)
 					{
@@ -101,8 +111,14 @@ namespace Domi.LowLevel
 								ref readonly var exP = ref header.GetContactPair(k);
 								if (!exP.isCollisionExit) continue;
 
+#if UNITY_6000_3_OR_NEWER
 								int ea = exP.colliderEntityId;
 								int eb = exP.otherColliderEntityId;
+#else
+								int ea = exP.colliderInstanceID;
+								int eb = exP.otherColliderInstanceID;
+#endif
+
 								if (ea == 0 || eb == 0) continue;
 								if (ea > eb) { int t = ea; ea = eb; eb = t; }
 

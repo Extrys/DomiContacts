@@ -38,7 +38,7 @@ namespace Domi
 			if (isPlaying)
 			{
 				if (!supressWaring)
-					UnityEngine.Debug.LogWarning($"[DomiContactBus] Is Already playing.");
+					Debug.LogWarning($"[DomiContactBus] Is Already playing.");
 				return;
 			}
 			Physics.ContactEvent += OnContactEvent;
@@ -49,7 +49,7 @@ namespace Domi
 		{
 			if (!isPlaying)
 			{
-				UnityEngine.Debug.LogWarning($"[DomiContactBus] Not playing.");
+				Debug.LogWarning($"[DomiContactBus] Not playing.");
 				return;
 			}
 			Physics.ContactEvent -= OnContactEvent;
@@ -114,8 +114,13 @@ namespace Domi
 			perCallbackSeenBodies.Clear();
 			for (int i = 0; i < headerCount; i++)
 			{
+#if UNITY_6000_3_OR_NEWER
 				int a = headerArray[i].bodyEntityId;
 				int b = headerArray[i].otherBodyEntityId;
+#else
+				int a = headerArray[i].bodyInstanceID;
+				int b = headerArray[i].otherBodyInstanceID;
+#endif
 				if (a != 0) perCallbackSeenBodies.Add(a);
 				if (b != 0) perCallbackSeenBodies.Add(b);
 			}
@@ -133,8 +138,14 @@ namespace Domi
 				}
 #endif
 
+#if UNITY_6000_3_OR_NEWER
 				int bodyIdA = header.bodyEntityId;
 				int bodyIdB = header.otherBodyEntityId;
+#else
+				int bodyIdA = header.bodyInstanceID;
+				int bodyIdB = header.otherBodyInstanceID;
+#endif
+
 
 				bool anyExit = r.anyExit != 0;
 				bool anyManifold = r.anyManifold != 0;
